@@ -1,0 +1,647 @@
+body {
+  margin: 0;
+  background: #eef2f7;
+  font-family: sans-serif;
+  user-select: none;
+}
+
+#game {
+  width: 640px;
+  margin: 20px auto;
+}
+
+#navButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#navButtons button {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #f8f9fa;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+#navButtons button:hover {
+  background: #e9ecef;
+}
+
+#navButtons button.nav-active {
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+  border-color: #1d4ed8;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* ========================================================
+   ホーム画面（ドット絵ルーム）
+   ======================================================== */
+#pixelStage {
+  position: relative;
+  width: 640px;
+  height: 360px;
+  background: #aeeeff;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #222;
+  box-sizing: border-box;
+}
+
+.pixel-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 360px;
+  pointer-events: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.layer-clouds {
+  background-image: url('/images/dot_clouds.png');
+  background-repeat: repeat-x;
+  background-position: 0 0;
+  background-size: 640px 360px;
+  animation: scrollClouds 40s linear infinite;
+}
+
+.layer-stars {
+  animation: swayStars 4.5s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+@keyframes scrollClouds {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: -640px;
+  }
+}
+
+@keyframes swayStars {
+  0% {
+    transform: translateY(0px) rotate(-0.5deg);
+  }
+  100% {
+    transform: translateY(3px) rotate(0.5deg);
+  }
+}
+
+/* Pixel Buttons */
+.pixel-btn {
+  position: absolute;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 15;
+  transition: transform 0.1s ease, filter 0.15s ease;
+}
+
+.pixel-btn:hover {
+  filter: brightness(1.15) drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+  transform: scale(1.08);
+}
+
+.pixel-btn:active {
+  transform: scale(0.93);
+}
+
+.pixel-btn img {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.btn-play {
+  left: 540px;
+  top: 26px;
+}
+
+.btn-status {
+  left: 540px;
+  top: 86px;
+}
+
+.btn-care {
+  left: 539px;
+  top: 133px;
+}
+
+.btn-search {
+  left: 16px;
+  top: 147px;
+}
+
+.btn-chest {
+  left: 17px;
+  top: 190px;
+}
+
+/* Anomy Creature */
+.anomy-creature {
+  position: absolute;
+  top: 204px;
+  width: 88px;
+  height: 72px;
+  cursor: pointer;
+  z-index: 12;
+  transition: transform 0.15s ease;
+}
+
+.anomy-sprite {
+  width: 88px;
+  height: 72px;
+  background-image: url('/images/anomy_squish_sheet.png');
+  background-repeat: no-repeat;
+  background-size: 440px 72px;
+  background-position: 0 0;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.anomy-sprite.squishing {
+  animation: anomySquish 0.75s steps(5) 1;
+}
+
+.anomy-static-img {
+  position: absolute;
+  left: 7px;
+  top: 1px;
+  width: 73px;
+  height: 64px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+  pointer-events: none;
+}
+
+@keyframes anomySquish {
+  0% {
+    background-position: 0px 0;
+  }
+  100% {
+    background-position: -440px 0;
+  }
+}
+
+.anomy-creature.walk {
+  animation: anomyWaddle 0.28s ease-in-out infinite alternate;
+}
+
+.anomy-creature.hop {
+  animation: anomyHop 0.35s ease-out;
+}
+
+@keyframes anomyWaddle {
+  0% {
+    margin-top: 0;
+  }
+  100% {
+    margin-top: -3px;
+  }
+}
+
+@keyframes anomyHop {
+  0%, 100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -24px;
+  }
+}
+
+/* Pixel Modal */
+.pixel-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.pixel-modal {
+  background: #ffffff;
+  border: 3px solid #222;
+  box-shadow: 4px 4px 0 #111;
+  border-radius: 4px;
+  width: 480px;
+  max-width: 90vw;
+  padding: 16px;
+}
+
+.pixel-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.pixel-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.pixel-modal-close {
+  background: none;
+  border: 1px solid #999;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.pixel-modal-desc {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.collection-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.collection-category h4 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.collection-items {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 80px;
+  transition: background 0.1s ease, transform 0.1s ease;
+}
+
+.collection-card:hover {
+  background: #eef6ff;
+  border-color: #2196f3;
+  transform: translateY(-2px);
+}
+
+.collection-card img {
+  width: 48px;
+  height: 40px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  margin-bottom: 4px;
+}
+
+.collection-card span {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.collection-card small {
+  font-size: 10px;
+  color: #2196f3;
+  margin-top: 2px;
+}
+
+.status-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.status-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.stat-label {
+  width: 170px;
+}
+
+.stat-bar-track {
+  flex: 1;
+  height: 12px;
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 8px;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.fill-softness {
+  background: #4caf50;
+}
+
+.fill-echo {
+  background: #2196f3;
+}
+
+.fill-brightness {
+  background: #ff9800;
+}
+
+.stat-val {
+  width: 50px;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* ========================================================
+   既存の演奏画面・育成画面スタイル
+   ======================================================== */
+#songSelect {
+  width: 640px;
+  margin-bottom: 10px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+#stage {
+  position: relative;
+  width: 640px;
+  height: 360px;
+  background: #ddd;
+  overflow: hidden;
+}
+
+#bg {
+  position: absolute;
+  width: 640px;
+  height: 360px;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.spot {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  user-select: none;
+}
+
+.spot.drag-over {
+  filter: drop-shadow(0 0 8px #ffeb3b);
+}
+
+.placed-icon {
+  position: absolute;
+  width: 66px;
+  height: 54px;
+  cursor: grab;
+  z-index: 10;
+  user-select: none;
+}
+
+.tray-icon {
+  width: 66px;
+  height: 54px;
+  margin-right: 18px;
+  cursor: grab;
+  user-select: none;
+}
+
+#playBtn {
+  position: absolute;
+  width: 108px;
+  height: 68px;
+  left: 520px;
+  top: 185px;
+  cursor: pointer;
+  z-index: 20;
+  transition: transform 0.1s ease;
+}
+
+#playBtn:active {
+  transform: scale(0.95);
+}
+
+#bottomTab {
+  position: absolute;
+  left: 82px;
+  top: 263px;
+  width: 559px;
+  height: 97px;
+  z-index: 15;
+}
+
+#tab0 {
+  position: absolute;
+  width: 559px;
+  height: 97px;
+  pointer-events: none;
+}
+
+#smallTabs {
+  position: absolute;
+  left: 10px;
+  top: -12px;
+  display: flex;
+}
+
+.small-tab {
+  width: 51px;
+  height: 12px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.small-tab.active-tab {
+  outline: 2px solid #2563eb;
+}
+
+#iconTray {
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  display: flex;
+}
+
+/* 育成画面のレイアウト追加 */
+#growTargetSelector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.target-btn {
+  flex: 1;
+  padding: 10px;
+  background: #ddd;
+  border: 1px solid #999;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.target-btn.active {
+  background: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+#growStage {
+  position: relative;
+  width: 640px;
+  height: 300px;
+  background: #f7f0ff;
+  border: 2px solid #ccc;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#growAnomy {
+  position: absolute;
+  width: 120px;
+  left: 260px;
+  top: 130px;
+  animation: anomyMove 2.4s infinite ease-in-out;
+  user-select: none;
+}
+
+#growAnomy.jump {
+  animation: anomyMove 2.4s infinite ease-in-out, anomyJump 0.35s ease-out;
+}
+
+.food-icon {
+  position: absolute;
+  width: 43px;
+  height: 43px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease;
+}
+
+.food-icon:active {
+  transform: scale(0.9);
+}
+
+.food-icon[data-stat="softness"] {
+  left: 450px;
+  top: 205px;
+}
+
+.food-icon[data-stat="echo"] {
+  left: 500px;
+  top: 205px;
+}
+
+.food-icon[data-stat="brightness"] {
+  left: 550px;
+  top: 205px;
+}
+
+@keyframes anomyMove {
+  0%, 100% {
+    transform: translateX(-35px);
+  }
+  50% {
+    transform: translateX(35px);
+  }
+}
+
+@keyframes anomyJump {
+  0%, 100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -35px;
+  }
+}
+
+#statsPanel {
+  background: white;
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+}
+
+#statsPanel p {
+  margin: 6px 0;
+}
+
+#growButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#testSoundBtn {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  flex: 2;
+  border-radius: 2px;
+}
+
+#testSoundBtn:hover {
+  background: #1976D2;
+}
+
+#resetStatsBtn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  flex: 1;
+  border-radius: 2px;
+}
+
+#resetStatsBtn:hover {
+  background: #d32f2f;
+}
+
+#statusLabel {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  min-height: 24px;
+}
